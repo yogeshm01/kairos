@@ -105,10 +105,7 @@ export function LandingPage() {
                 Get Started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="px-8 py-4 rounded-xl font-semibold border border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
-                <Play className="w-5 h-5" />
-                Watch Demo
-              </button>
+              
             </motion.div>
           </motion.div>
 
@@ -257,7 +254,7 @@ export function LandingPage() {
       </section>
 
       {/* Interactive AI Mission Planner */}
-      <section className="relative py-32 px-6">
+      {/* <section className="relative py-32 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -357,7 +354,7 @@ export function LandingPage() {
             )}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Comparison Section */}
       <section className="relative py-32 px-6">
@@ -369,7 +366,7 @@ export function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-              <span className="text-gradient">Why AI Beats Traditional To-Do Apps</span>
+              <span className="text-gradient">Why Kairos Beats Traditional To-Do Apps</span>
             </h2>
           </motion.div>
 
@@ -538,7 +535,7 @@ export function LandingPage() {
       {/* Footer */}
       <footer className="relative py-12 px-6 border-t border-white/10">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
-          <p>© 2024 Mission Control AI. All rights reserved.</p>
+          <p>© 2026 Kairos. All rights reserved.</p>
         </div>
       </footer>
     </div>
