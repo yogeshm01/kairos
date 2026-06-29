@@ -20,7 +20,10 @@ def create_app() -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.cors_origins,
+        allow_origins=[
+        "http://localhost:5173",
+        "https://kairos-fawn-beta.vercel.app"
+    ],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
