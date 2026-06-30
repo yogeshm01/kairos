@@ -92,6 +92,12 @@ export const tasksApi = {
       method: "PATCH",
       body: JSON.stringify({ status }),
     }),
+
+  delete: (token: string, taskId: string) =>
+    apiClient<void>(`/tasks/${taskId}`, {
+      token,
+      method: "DELETE",
+    }),
 };
 
 export const usersApi = {

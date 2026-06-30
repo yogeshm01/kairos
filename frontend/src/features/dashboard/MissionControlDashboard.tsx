@@ -18,7 +18,9 @@ import {
   ArrowRight,
   Sparkles,
   X,
-  ChevronRight
+  ChevronRight,
+  Trash2,
+  MoreVertical
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +33,7 @@ import {
   useCoachMessage,
   useWeeklyInsights,
   useUpdateTaskStatus,
+  useDeleteMission,
 } from "@/hooks/useMissions";
 import {
   buildActivityFeed,
@@ -54,6 +57,7 @@ export function MissionControlDashboard() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterType>("active");
+  const [showMissionMenu, setShowMissionMenu] = useState<string | null>(null);
   
   const primary = missions ? pickPrimaryMission(missions) : null;
   const activeId = selectedId ?? primary?.id ?? "";
@@ -62,6 +66,7 @@ export function MissionControlDashboard() {
   const { data: coach, isLoading: coachLoading } = useCoachMessage(activeId);
   const { data: weekly } = useWeeklyInsights(activeId);
   const updateTask = useUpdateTaskStatus(activeId);
+  const deleteMission = useDeleteMission();
 
   // AI Priority Sorting - considers deadline, workload, difficulty, dependencies, productivity patterns
   const sortedMissions = useMemo(() => {
@@ -188,16 +193,54 @@ export function MissionControlDashboard() {
                       )}>
                         {mission.title}
                       </h3>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/missions/${mission.id}`);
-                        }}
-                        className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 transition-colors flex-shrink-0"
-                        title="View Mission Dashboard"
-                      >
-                        <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
-                      </button>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/missions/${mission.id}`);
+                          }}
+                          className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 transition-colors"
+                          title="View Mission Dashboard"
+                        >
+                          <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                        </button>
+                        <div className="relative">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowMissionMenu(showMissionMenu === mission.id ? null : mission.id);
+                            }}
+                            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                            title="Mission actions"
+                          >
+                            <MoreVertical className="w-3.5 h-3.5 text-gray-400" />
+                          </button>
+                          {showMissionMenu === mission.id && (
+                            <div className="absolute right-0 top-10 z-10 w-40 rounded-xl border border-white/10 bg-[#050608]/95 p-1 shadow-xl">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowMissionMenu(null);
+                                  if (confirm("Are you sure you want to delete this mission? This action cannot be undone.")) {
+                                    void deleteMission.mutate(mission.id, {
+                                      onSuccess: () => {
+                                        if (selectedId === mission.id) {
+                                          setSelectedId(null);
+                                        }
+                                      },
+                                    });
+                                  }
+                                }}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-400 hover:bg-red-500/10"
+                                disabled={deleteMission.isPending}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-3 text-xs text-gray-400">

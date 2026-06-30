@@ -12,11 +12,13 @@ import { useAIProfile } from "@/hooks/useMissions";
 export function LoginPage() {
   const { user, loading, error, loginWithGoogle, initialized } = useAuthStore();
   const firebaseReady = isFirebaseConfigured();
+  
+  // Only call useAIProfile if user is authenticated
   const { data: aiProfile } = useAIProfile();
 
   if (initialized && user) {
     // Redirect to onboarding if AI Profile not completed
-    if (!aiProfile?.onboarding_completed) {
+    if (aiProfile && !aiProfile.onboarding_completed) {
       return <Navigate to="/onboarding" replace />;
     }
     return <Navigate to="/dashboard" replace />;

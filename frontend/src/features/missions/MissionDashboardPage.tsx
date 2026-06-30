@@ -23,6 +23,7 @@ import {
   useCoachMessage,
   useCreateReflection,
   useDeleteMission,
+  useDeleteTask,
   useMissionDashboard,
   useRecoveryPlan,
   useRegenerateMission,
@@ -80,6 +81,7 @@ export function MissionDashboardPage() {
   const generateRecovery = useRecoveryPlan(id);
   const applyRecovery = useApplyRecoveryPlan(id);
   const deleteMission = useDeleteMission();
+  const deleteTask = useDeleteTask(id);
   const regenerateMission = useRegenerateMission(id);
   const [recoveryPlan, setRecoveryPlan] = useState<RecoveryPlanResponse | undefined>();
   const [showRecovery, setShowRecovery] = useState(false);
@@ -411,6 +413,11 @@ export function MissionDashboardPage() {
         }}
         onTaskEdit={(taskId) => {
           console.log("Edit task:", taskId);
+        }}
+        onTaskDelete={(taskId) => {
+          if (confirm("Are you sure you want to delete this task? This action cannot be undone.")) {
+            void deleteTask.mutate(taskId);
+          }
         }}
       />
 

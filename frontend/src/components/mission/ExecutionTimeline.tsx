@@ -10,6 +10,7 @@ import {
   SkipForward,
   Calendar,
   MinusCircle,
+  Trash2,
 } from "lucide-react";
 
 import { GlowPanel } from "@/components/ui/glow-panel";
@@ -25,6 +26,7 @@ type ExecutionTimelineProps = {
   onTaskSkip?: (taskId: string) => void;
   onTaskReschedule?: (taskId: string) => void;
   onTaskEdit?: (taskId: string) => void;
+  onTaskDelete?: (taskId: string) => void;
 };
 
 type TaskStatusState = "completed" | "current" | "upcoming" | "skipped";
@@ -44,6 +46,7 @@ export function ExecutionTimeline({
   onTaskSkip,
   onTaskReschedule,
   onTaskEdit,
+  onTaskDelete,
 }: ExecutionTimelineProps) {
   const completedTasks = tasks.filter((t) => t.task.status === "completed").length;
   const milestoneGroups = milestones.map((milestone) => ({
@@ -106,6 +109,7 @@ export function ExecutionTimeline({
                     onTaskSkip={onTaskSkip}
                     onTaskReschedule={onTaskReschedule}
                     onTaskEdit={onTaskEdit}
+                    onTaskDelete={onTaskDelete}
                   />
                 ))
               )}
@@ -132,6 +136,7 @@ export function ExecutionTimeline({
                   onTaskSkip={onTaskSkip}
                   onTaskReschedule={onTaskReschedule}
                   onTaskEdit={onTaskEdit}
+                  onTaskDelete={onTaskDelete}
                 />
               ))}
             </div>
@@ -150,6 +155,7 @@ function TaskRow({
   onTaskSkip,
   onTaskReschedule,
   onTaskEdit,
+  onTaskDelete,
 }: {
   task: Task;
   detail?: string | null;
@@ -158,6 +164,7 @@ function TaskRow({
   onTaskSkip?: (taskId: string) => void;
   onTaskReschedule?: (taskId: string) => void;
   onTaskEdit?: (taskId: string) => void;
+  onTaskDelete?: (taskId: string) => void;
 }) {
   const [showMenu, setShowMenu] = useState(false);
   const statusState = getTaskStatusState(task);
@@ -251,6 +258,18 @@ function TaskRow({
                 >
                   <SkipForward className="h-3.5 w-3.5" />
                   Skip
+                </button>
+              ) : null}
+              {onTaskDelete ? (
+                <button
+                  onClick={() => {
+                    setShowMenu(false);
+                    onTaskDelete(task.id);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-danger hover:bg-danger/10"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete
                 </button>
               ) : null}
             </div>
