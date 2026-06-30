@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import calendar, health, missions, tasks, users
+from app.api.routes import ai_profiles, calendar, health, missions, tasks, users
 from app.core.config import settings
 from app.core.errors import AppError
 from app.core.logging import configure_logging
@@ -35,6 +35,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router, prefix=settings.api_prefix)
     app.include_router(users.router, prefix=settings.api_prefix)
+    app.include_router(ai_profiles.router, prefix=settings.api_prefix)
     app.include_router(missions.router, prefix=settings.api_prefix)
     app.include_router(tasks.router, prefix=settings.api_prefix)
     app.include_router(calendar.router, prefix=settings.api_prefix)

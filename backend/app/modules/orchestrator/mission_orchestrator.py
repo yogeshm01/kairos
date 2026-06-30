@@ -160,3 +160,74 @@ class MissionOrchestrator:
             )
 
         return tasks
+
+    def regenerate_mission_plan(
+        self,
+        mission_id: str,
+        user_id: str,
+        today: date | None = None,
+    ) -> MissionPlanResponse:
+        start_date = today or date.today()
+        mission = self.mission_repository.get_mission(mission_id, user_id)
+        if not mission:
+            raise RuntimeError("Mission not found for regeneration")
+
+        # Delete existing milestones and tasks
+        existing_tasks = self.task_repository.list_by_mission(mission_id, user_id)
+        for task in existing_tasks:
+            self.task_repository.collection.document(task.id).delete()
+
+        existing_milestones = self.milestone_repository.list_by_mission(mission_id, user_id)
+        for milestone in existing_milestones:
+            self.milestone_repository.collection.document(milestone.id).delete()
+
+        # Re-analyze mission with current data
+        mission_input = MissionCreate(
+            title=mission.title,
+            description=mission.description,
+            deadline=mission.deadline,
+            why_it_matters=mission.why_it_matters,
+            available_minutes_per_day=mission.available_minutes_per_day,
+            intensity_preference=mission.intensity_preference,
+        )
+        analysis = self.mission_ai_service.analyze_mission(mission_input, today=start_date)
+
+        # Update mission with new analysis
+        mission = self.mission_repository.update_mission(
+            mission_id,
+            user_id,
+            MissionUpdate(
+                confidence_score=analysis.confidence_score,
+                risk_level=analysis.risk_level,
+                next_best_action=analysis.next_best_action,
+            ),
+        )
+        if mission is None:
+            raise RuntimeError("Mission disappeared during regeneration.")
+
+        # Recreate milestones and tasks
+        milestones = self._create_milestones(mission.id, user_id, analysis.milestones, start_date)
+        tasks = self._create_tasks(mission.id, user_id, analysis.tasks, milestones, start_date)
+        daily_plan = self._create_initial_daily_plan(
+            mission, milestones, tasks, user_id, start_date, analysis.next_best_action
+        )
+
+        # Log regeneration event
+        self.ai_event_repository.create_event(
+            AiEventCreate(
+                mission_id=mission.id,
+                event_type=AiEventType.MISSION_ANALYSIS,
+                module_name="mission_orchestrator",
+                input_snapshot={"regenerated": True, **mission_input.model_dump(mode="json")},
+                output_snapshot=analysis.model_dump(mode="json"),
+            ),
+            user_id,
+        )
+
+        return MissionPlanResponse(
+            mission=mission,
+            milestones=milestones,
+            tasks=tasks,
+            analysis=analysis,
+            daily_plan=daily_plan,
+        )

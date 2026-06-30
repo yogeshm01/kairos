@@ -8,6 +8,8 @@ import { MissionControlDashboard } from "@/features/dashboard/MissionControlDash
 import { MissionDashboardPage } from "@/features/missions/MissionDashboardPage";
 import { NewMissionPage } from "@/features/missions/NewMissionPage";
 import { LandingPage } from "@/features/landing/LandingPage";
+import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
+import { ProfilePage } from "@/features/profile/ProfilePage";
 
 export function AppRouter() {
   return (
@@ -21,9 +23,11 @@ export function AppRouter() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
+            <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/dashboard" element={<MissionControlDashboard />} />
             <Route path="/missions/new" element={<NewMissionPage />} />
             <Route path="/missions/:id" element={<MissionDashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
 

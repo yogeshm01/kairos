@@ -4,12 +4,55 @@ export type TaskPriority = "low" | "medium" | "high" | "critical";
 export type MissionStatus = "active" | "completed" | "paused" | "at_risk";
 export type IntensityPreference = "light" | "balanced" | "intense";
 
+export type WorkStyle = "morning_person" | "night_owl" | "flexible" | "burst_worker";
+export type ReminderStyle = "gentle" | "direct" | "motivational" | "minimal";
+export type FocusEnvironment = "quiet" | "background_noise" | "music" | "cafe" | "varies";
+
 export type UserProfile = {
   uid: string;
   email: string | null;
   name: string | null;
   picture: string | null;
 };
+
+export type AIProfile = {
+  id: string;
+  user_id: string;
+  occupation: string | null;
+  productive_hours_start: number | null;
+  productive_hours_end: number | null;
+  daily_available_minutes: number | null;
+  work_style: WorkStyle | null;
+  reminder_style: ReminderStyle | null;
+  focus_environment: FocusEnvironment | null;
+  common_distractions: string | null;
+  preferred_task_length: number | null;
+  break_frequency_minutes: number | null;
+  energy_patterns: string | null;
+  goals_and_motivations: string | null;
+  constraints: string | null;
+  onboarding_completed: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AIProfileCreate = {
+  occupation?: string;
+  productive_hours_start?: number;
+  productive_hours_end?: number;
+  daily_available_minutes?: number;
+  work_style?: WorkStyle;
+  reminder_style?: ReminderStyle;
+  focus_environment?: FocusEnvironment;
+  common_distractions?: string;
+  preferred_task_length?: number;
+  break_frequency_minutes?: number;
+  energy_patterns?: string;
+  goals_and_motivations?: string;
+  constraints?: string;
+};
+
+export type AIProfileUpdate = AIProfileCreate;
 
 export type Mission = {
   id: string;

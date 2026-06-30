@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Mission Control AI"
+    app_name: str = "Kairos"
     app_env: str = "local"
     api_prefix: str = "/api"
     backend_cors_origins: str = "http://localhost:5173"

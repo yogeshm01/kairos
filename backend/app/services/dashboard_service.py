@@ -67,6 +67,28 @@ class DailyPlanService:
             raise not_found("Task not found")
         return task
 
+    def update_task_details(self, task_id: str, user_id: str, payload):
+        task = self.task_repository.update_task(task_id, user_id, payload)
+        if task is None:
+            raise not_found("Task not found")
+        return task
+
+    def reschedule_task(self, task_id: str, user_id: str, scheduled_date: date, estimated_minutes: int | None):
+        from app.schemas.task import TaskUpdate
+        
+        task = self.task_repository.get_task(task_id, user_id)
+        if task is None:
+            raise not_found("Task not found")
+        
+        update_data = TaskUpdate(scheduled_date=scheduled_date)
+        if estimated_minutes is not None:
+            update_data.estimated_minutes = estimated_minutes
+        
+        updated_task = self.task_repository.update_task(task_id, user_id, update_data)
+        if updated_task is None:
+            raise not_found("Task not found")
+        return updated_task
+
 
 class DashboardService:
     def __init__(

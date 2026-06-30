@@ -1,5 +1,8 @@
 import { apiClient } from "@/lib/apiClient";
 import type {
+  AIProfile,
+  AIProfileCreate,
+  AIProfileUpdate,
   ApplyRecoveryPlanResponse,
   CoachMessageResponse,
   ConfidenceResponse,
@@ -26,6 +29,25 @@ export const missionsApi = {
       token,
       method: "POST",
       body: JSON.stringify(payload),
+    }),
+
+  update: (token: string, missionId: string, payload: Partial<MissionCreate>) =>
+    apiClient<Mission>(`/missions/${missionId}`, {
+      token,
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+
+  delete: (token: string, missionId: string) =>
+    apiClient<void>(`/missions/${missionId}`, {
+      token,
+      method: "DELETE",
+    }),
+
+  regenerate: (token: string, missionId: string) =>
+    apiClient<MissionPlanResponse>(`/missions/${missionId}/regenerate`, {
+      token,
+      method: "POST",
     }),
 
   dashboard: (token: string, missionId: string) =>
@@ -74,4 +96,28 @@ export const tasksApi = {
 
 export const usersApi = {
   me: (token: string) => apiClient<UserProfile>("/me", { token }),
+};
+
+export const aiProfilesApi = {
+  get: (token: string) => apiClient<AIProfile>("/ai-profiles/me", { token }),
+
+  create: (token: string, payload: AIProfileCreate) =>
+    apiClient<AIProfile>("/ai-profiles/me", {
+      token,
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  update: (token: string, payload: AIProfileUpdate) =>
+    apiClient<AIProfile>("/ai-profiles/me", {
+      token,
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+
+  completeOnboarding: (token: string) =>
+    apiClient<AIProfile>("/ai-profiles/me/complete-onboarding", {
+      token,
+      method: "POST",
+    }),
 };

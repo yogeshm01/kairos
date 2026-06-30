@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { LogOut, Plus, Radar } from "lucide-react";
+import { LogOut, Plus, Radar, User } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -11,28 +11,33 @@ export function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/70 backdrop-blur-2xl">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <Link to="/dashboard" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10">
-              <Radar className="h-4 w-4 text-accent" />
+    <div className="min-h-screen bg-[#050608]">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050608]/80 backdrop-blur-2xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30">
+              <Radar className="h-5 w-5 text-cyan-400" />
             </div>
-            <span className="text-sm font-semibold tracking-tight">Mission Control</span>
+            <span className="text-lg font-bold tracking-tight">
+              <span className="text-gradient">Kairos</span>
+            </span>
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink to="/dashboard" active={location.pathname === "/dashboard"}>
               Command Center
             </NavLink>
+            <NavLink to="/profile" active={location.pathname === "/profile"}>
+              Profile
+            </NavLink>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Link
               to="/missions/new"
-              className="hidden items-center gap-1.5 rounded-lg bg-accent/10 px-3 py-1.5 text-sm font-medium text-accent transition hover:bg-accent/20 sm:inline-flex"
+              className="hidden items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-cyan-500/30 sm:inline-flex"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
               New Mission
             </Link>
 
@@ -40,18 +45,27 @@ export function AppLayout() {
               <img
                 src={user.photoURL}
                 alt=""
-                className="h-7 w-7 rounded-full ring-1 ring-border"
+                className="h-9 w-9 rounded-full ring-2 ring-cyan-500/20"
               />
-            ) : null}
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30">
+                <User className="h-4 w-4 text-cyan-400" />
+              </div>
+            )}
 
-            <Button variant="ghost" size="sm" onClick={() => void logout()}>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => void logout()}
+              className="rounded-xl text-gray-400 hover:text-white hover:bg-white/10"
+            >
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-10">
+      <main className="mx-auto max-w-7xl px-6 py-10">
         <Outlet />
       </main>
     </div>
@@ -71,8 +85,10 @@ function NavLink({
     <Link
       to={to}
       className={cn(
-        "rounded-lg px-3 py-1.5 text-sm transition",
-        active ? "text-foreground" : "text-muted hover:text-foreground",
+        "rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200",
+        active 
+          ? "text-cyan-400 bg-cyan-500/10" 
+          : "text-gray-400 hover:text-white hover:bg-white/10",
       )}
     >
       {children}

@@ -54,17 +54,6 @@ export function NextBestAction({
             <p className="max-w-xl text-muted leading-relaxed">{rationale}</p>
           ) : null}
         </div>
-
-        <Button
-          size="lg"
-          className="h-14 shrink-0 px-8 text-base shadow-glow-sm"
-          onClick={onStart}
-          disabled={isStarting}
-        >
-          <Zap className="h-5 w-5" />
-          Start Now
-          <ArrowRight className="h-5 w-5" />
-        </Button>
       </div>
     </GlowPanel>
   );

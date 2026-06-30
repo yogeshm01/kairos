@@ -401,7 +401,7 @@ export function LandingPage() {
               viewport={{ once: true }}
               className="panel-glow-accent p-8 rounded-2xl space-y-6"
             >
-              <h3 className="text-2xl font-semibold text-cyan-400">AI Mission Control</h3>
+              <h3 className="text-2xl font-semibold text-cyan-400">Kairos</h3>
               <ul className="space-y-4">
                 {[
                   "Proactive planning & guidance",
@@ -438,7 +438,7 @@ export function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Target, title: "AI Mission Planning", desc: "Break down complex goals into actionable steps" },
+              { icon: Target, title: "Kairos Planning", desc: "Break down complex goals into actionable steps" },
               { icon: AlertTriangle, title: "Deadline Prediction", desc: "Know if you're on track to succeed" },
               { icon: BarChart3, title: "Smart Prioritization", desc: "Focus on what matters most right now" },
               { icon: Clock, title: "Personalized Focus Sessions", desc: "AI-optimized work blocks for maximum productivity" },

@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useAuthStore } from "@/features/auth/authStore";
-import { missionsApi, tasksApi } from "@/lib/api";
-import type { MissionCreate, ReflectionCreate, TaskStatus } from "@/types/api";
+import { aiProfilesApi, missionsApi, tasksApi } from "@/lib/api";
+import type { AIProfileCreate, AIProfileUpdate, MissionCreate, ReflectionCreate, TaskStatus } from "@/types/api";
 
 function useToken() {
   const token = useAuthStore((s) => s.token);
@@ -65,6 +65,43 @@ export function useCreateMission() {
   });
 }
 
+export function useUpdateMission(missionId: string) {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: Partial<MissionCreate>) => missionsApi.update(token, missionId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["missions"] });
+      void queryClient.invalidateQueries({ queryKey: ["missions", missionId] });
+      void queryClient.invalidateQueries({ queryKey: ["missions", missionId, "dashboard"] });
+    },
+  });
+}
+
+export function useDeleteMission() {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (missionId: string) => missionsApi.delete(token, missionId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["missions"] });
+    },
+  });
+}
+
+export function useRegenerateMission(missionId: string) {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => missionsApi.regenerate(token, missionId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["missions"] });
+      void queryClient.invalidateQueries({ queryKey: ["missions", missionId] });
+      void queryClient.invalidateQueries({ queryKey: ["missions", missionId, "dashboard"] });
+    },
+  });
+}
+
 export function useUpdateTaskStatus(missionId: string) {
   const token = useToken();
   const queryClient = useQueryClient();
@@ -105,6 +142,47 @@ export function useApplyRecoveryPlan(missionId: string) {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["missions", missionId] });
       void queryClient.invalidateQueries({ queryKey: ["missions", missionId, "dashboard"] });
+    },
+  });
+}
+
+export function useAIProfile() {
+  const token = useToken();
+  return useQuery({
+    queryKey: ["ai-profile"],
+    queryFn: () => aiProfilesApi.get(token),
+  });
+}
+
+export function useCreateAIProfile() {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AIProfileCreate) => aiProfilesApi.create(token, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["ai-profile"] });
+    },
+  });
+}
+
+export function useUpdateAIProfile() {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AIProfileUpdate) => aiProfilesApi.update(token, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["ai-profile"] });
+    },
+  });
+}
+
+export function useCompleteOnboarding() {
+  const token = useToken();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => aiProfilesApi.completeOnboarding(token),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["ai-profile"] });
     },
   });
 }

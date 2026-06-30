@@ -20,3 +20,10 @@ class MissionRepository(FirestoreRepository[Mission]):
     ) -> Mission | None:
         return self.update_owned(mission_id, user_id, data)
 
+    def delete_mission(self, mission_id: str, user_id: str) -> bool:
+        existing = self.get_owned(mission_id, user_id)
+        if not existing:
+            return False
+        self.collection.document(mission_id).delete()
+        return True
+

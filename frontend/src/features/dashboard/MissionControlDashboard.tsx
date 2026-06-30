@@ -114,7 +114,7 @@ export function MissionControlDashboard() {
         {/* Header */}
         <div className="p-6 border-b border-white/10 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gradient">Mission Control</h2>
+            <h2 className="text-xl font-semibold text-gradient">Kairos</h2>
             <button
               onClick={() => navigate("/missions/new")}
               className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 transition-colors"
@@ -188,9 +188,16 @@ export function MissionControlDashboard() {
                       )}>
                         {mission.title}
                       </h3>
-                      {isSelected && (
-                        <ChevronRight className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/missions/${mission.id}`);
+                        }}
+                        className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 transition-colors flex-shrink-0"
+                        title="View Mission Dashboard"
+                      >
+                        <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+                      </button>
                     </div>
 
                     <div className="flex items-center gap-3 text-xs text-gray-400">
@@ -339,15 +346,7 @@ function MissionDetailView({
             )}
           </div>
 
-          <div className="flex gap-4">
-            <button
-              onClick={() => onStartTask(action.taskId || null)}
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-xl font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 flex items-center gap-2"
-            >
-              <Zap className="w-5 h-5" />
-              Start Focus Session
-            </button>
-          </div>
+          
         </div>
 
         {/* Quick Stats */}

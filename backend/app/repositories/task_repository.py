@@ -22,6 +22,9 @@ class TaskRepository(FirestoreRepository[Task]):
         )
         return [self._document_to_schema(snapshot.id, snapshot.to_dict() or {}) for snapshot in snapshots]
 
+    def list_by_mission(self, mission_id: str, user_id: str, limit: int = 200) -> list[Task]:
+        return self.list_for_mission(mission_id, user_id, limit)
+
     def update_task(self, task_id: str, user_id: str, data: TaskUpdate) -> Task | None:
         payload = data.model_dump(exclude_none=True)
         if payload.get("status") == TaskStatus.COMPLETED:

@@ -58,6 +58,22 @@ def update_mission(
     return MissionService().update_mission(mission_id, current_user.uid, payload)
 
 
+@router.delete("/{mission_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_mission(
+    mission_id: str,
+    current_user: AuthenticatedUser = Depends(get_current_user),
+) -> None:
+    MissionService().delete_mission(mission_id, current_user.uid)
+
+
+@router.post("/{mission_id}/regenerate", response_model=MissionPlanResponse)
+def regenerate_mission_plan(
+    mission_id: str,
+    current_user: AuthenticatedUser = Depends(get_current_user),
+) -> MissionPlanResponse:
+    return MissionService().regenerate_mission_plan(mission_id, current_user.uid)
+
+
 @router.get("/{mission_id}/dashboard", response_model=MissionDashboard)
 def get_mission_dashboard(
     mission_id: str,
